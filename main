@@ -1,0 +1,23 @@
+import requests
+import re
+from bs4 import BeautifulSoup
+
+URL_town = input('Quina població desitjes cercar?')
+URL_town = re.sub(" ","_", URL_town)
+URL_habitaclia = 'https://www.habitaclia.com/viviendas-'
+URL_final = '.html'
+URL_total = URL_habitaclia + URL_town + URL_final
+
+response = requests.get(URL_total)
+
+soup = BeautifulSoup(response.text, "html.parser")
+
+house_type = soup.findAll('h3', attrs={"class":"list-item-title"})
+
+for element in house_type:
+    title = element.findAll('a', href=True)
+    title = str(title)
+    tipus = re.search('title=["](.+?)["]>', title)
+    print(tipus.group(1))
+    
+    
