@@ -1,8 +1,10 @@
 import requests
 import re
 from bs4 import BeautifulSoup
+import csv
+import pandas as pd
 
-URL_town = input('Quina població desitjes cercar?')
+URL_town = input('Quina població desitjes cercar? ')
 URL_town = re.sub(" ","_", URL_town)
 URL_habitaclia = 'https://www.habitaclia.com/viviendas-'
 URL_final = '.html'
@@ -14,10 +16,23 @@ soup = BeautifulSoup(response.text, "html.parser")
 
 house_type = soup.findAll('h3', attrs={"class":"list-item-title"})
 
+prices = soup.find_all('section', attrs={"class":"list-item-content-second"})
+tipus_list = []
+price_list = []
+
+for element in prices:
+    preu = element.findAll('span', attrs={"class":"font-2"})
+    preu = str(preu)
+    preu = re.search('>(.+?) €<', preu)
+    price_list.append(preu.group(1))
+
+    
 for element in house_type:
     title = element.findAll('a', href=True)
     title = str(title)
     tipus = re.search('title=["](.+?)["]>', title)
-    print(tipus.group(1))
+    tipus = re.search('(.+?)[" "]', tipus.group(1))
+    tipus_list.append(tipus.group(1))
     
-    
+df = pd.DataFrame()
+df.assign(tipus=tipus_list,price=price_list)
