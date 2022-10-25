@@ -21,6 +21,8 @@ item_content_second = soup.find_all('section', attrs={"class":"list-item-content
 type_list = []
 price_list = []
 size_list = []
+bath_list = []
+room_list = []
 
 for element in item_content_second:
     preu = element.findAll('span', attrs={"class":"font-2"})
@@ -37,8 +39,25 @@ for element in item_content_first:
     type_list.append(title.group(1))
     size = element.findAll('p', attrs={"class":"list-item-feature"})
     size = str(size)
-    size = re.search('[1-9]m', size)
+    size = re.search('[0-9]+m', size).group(0)
+    size = re.search('[0-9]+', size).group(0)
     size_list.append(size)
+    room = element.findAll('p', attrs={"class":"list-item-feature"})
+    room = str(room)
+    room = re.search('[0-9][" "]hab', room)
+    if room: 
+        room = re.search('[0-9]+[" "]', room.group(0)).group(0)
+    else:
+        room = "0"
+    room_list.append(room)
+    bath = element.findAll('p', attrs={"class":"list-item-feature"})
+    bath = str(bath)
+    bath = re.search('[0-9][" "]baño', bath)
+    if bath: 
+        bath = re.search('[0-9]+[" "]', bath.group(0)).group(0)
+    else:
+        bath = "0"
+    bath_list.append(bath)
     
 df = pd.DataFrame()
-df.assign(type=type_list,size=size_list, price=price_list)
+df.assign(type=type_list,size=size_list, price=price_list, rooms=room_list, baths=bath_list)
