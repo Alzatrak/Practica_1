@@ -14,25 +14,31 @@ response = requests.get(URL_total)
 
 soup = BeautifulSoup(response.text, "html.parser")
 
-house_type = soup.findAll('h3', attrs={"class":"list-item-title"})
+item_content_first = soup.findAll('section', attrs={"class":"list-item-content"})
 
-prices = soup.find_all('section', attrs={"class":"list-item-content-second"})
-tipus_list = []
+item_content_second = soup.find_all('section', attrs={"class":"list-item-content-second"})
+
+type_list = []
 price_list = []
+size_list = []
 
-for element in prices:
+for element in item_content_second:
     preu = element.findAll('span', attrs={"class":"font-2"})
     preu = str(preu)
     preu = re.search('>(.+?) €<', preu)
     price_list.append(preu.group(1))
 
     
-for element in house_type:
+for element in item_content_first:
     title = element.findAll('a', href=True)
     title = str(title)
-    tipus = re.search('title=["](.+?)["]>', title)
-    tipus = re.search('(.+?)[" "]', tipus.group(1))
-    tipus_list.append(tipus.group(1))
+    title = re.search('title=["](.+?)["]>', title)
+    title = re.search('(.+?)[" "]', title.group(1))
+    type_list.append(title.group(1))
+    size = element.findAll('p', attrs={"class":"list-item-feature"})
+    size = str(size)
+    size = re.search('[1-9]m', size)
+    size_list.append(size)
     
 df = pd.DataFrame()
-df.assign(tipus=tipus_list,price=price_list)
+df.assign(type=type_list,size=size_list, price=price_list)
