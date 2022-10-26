@@ -30,18 +30,34 @@ for i in range(5000):
             preu = element.findAll('span', attrs={"class":"font-2"})
             preu = str(preu)
             preu = re.search('>(.+?) €<', preu)
-            price_list.append(preu.group(1))
+            try:
+                price_list.append(preu.group(1))
+            except AttributeError:
+                price_list.append(preu)
 
         for element in item_content_first:
+            
             title = element.findAll('a', href=True)
             title = str(title)
             title = re.search('title=["](.+?)["]>', title)
-            title = re.search('(.+?)[" "]', title.group(1))
-            type_list.append(title.group(1))
+            try:
+                title = re.search('(.+?)[" "]', title.group(1))
+            except AttributeError:
+                title = re.search('(.+?)[" "]', str(title))
+            try:
+                type_list.append(title.group(1))
+            except AttributeError:
+                type_list.append(title)
             size = element.findAll('p', attrs={"class":"list-item-feature"})
             size = str(size)
-            size = re.search('[0-9]+m', size).group(0)
-            size = re.search('[0-9]+', size).group(0)
+            try:
+                size = re.search('[0-9]+m', size).group(0)
+            except AttributeError:
+                size = re.search('[0-9]+m', size)
+            try:  
+                size = re.search('[0-9]+', str(size)).group(0)
+            except AttributeError:
+                size = re.search('[0-9]+', str(size))
             size_list.append(size)
             room = element.findAll('p', attrs={"class":"list-item-feature"})
             room = str(room)
@@ -61,4 +77,6 @@ for i in range(5000):
                 bath = "0"
                 bath_list.append(bath)
     
-df.assign(type=type_list,size=size_list, price=price_list, rooms=room_list, baths=bath_list)
+df = df.assign(type=type_list,size=size_list, price=price_list, rooms=room_list, baths=bath_list)
+
+df.to_csv((str(URL_town)+".csv"), index=True)
