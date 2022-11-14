@@ -1,9 +1,25 @@
 import requests
 import re
 from bs4 import BeautifulSoup
-import csv
+#import csv
 import pandas as pd
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
+
+from datetime import datetime
+fecha=datetime.now()
+
+print(fecha)
+
+#modifica user agent
+headers = {'User-Agent': 'Mozilla/5.0'}
+
+#mirem el robots.txt per saber les restriccions
+
+response = requests.get('https://www.habitaclia.com/robots.txt')
+robots = response.text
+print("\nFitxer robots.txt de https://www.habitaclia.com")
+print("Verificació de restriccions:\n")
+print(robots)
 
 URL_town = input('Quina població desitjes cercar? ')
 df = pd.DataFrame()
@@ -80,4 +96,4 @@ for i in range(5000):
 
 
 df = df.assign(type=type_list,size=size_list, price=price_list, rooms=room_list, baths=bath_list)
-df.to_csv((str(URL_town)+".csv"), index=True)
+df.to_csv((str(URL_town)+format(fecha.strftime("%Y%m%d"))+".csv"), index=True)
