@@ -1,33 +1,34 @@
+# Importem llibreries
+
+from datetime import datetime
+import pandas as pd
 import requests
 import re
 from bs4 import BeautifulSoup
 
-# import csv
-import pandas as pd
+# Apliquem opció de dos decimals al data
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
 
-from datetime import datetime
+# Generem la data que posteriorment aplicarem al nom del dataset
 fecha=datetime.now()
 
 # Modifica user agent
 headers = {'User-Agent': 'Mozilla/5.0'}
 
-# Mirem el robots.txt per saber les restriccions
-
-response = requests.get('https://www.habitaclia.com/robots.txt')
-robots = response.text
-print("\nFitxer robots.txt de https://www.habitaclia.com")
-print("Verificació de restriccions:\n")
-print(robots)
-
+# Generem input per a que l'usuari apliqui la població desitjada
 URL_town = input('Quina població desitjes cercar? ')
+
+# Generem dataframe
 df = pd.DataFrame()
+
+# Generem llistes buides amb les variables que ens generarà el codi
 type_list = []
 price_list = []
 size_list = []
 bath_list = []
 room_list = []
 
+# Muntem loop que anirà buscant en les pàgines web les variables i els afegirà a la llista
 for i in range(5000):
     URL_habitaclia = 'https://www.habitaclia.com/viviendas-'
     URL_town = re.sub(" ","_", URL_town)
@@ -93,6 +94,8 @@ for i in range(5000):
                 bath = "0"
                 bath_list.append(bath)
 
-
+# Generem el data amb les columnes igual a les llistes anteriorment completades.
 df = df.assign(type=type_list,size=size_list, price=price_list, rooms=room_list, baths=bath_list)
+
+# Generem el document csv amb el format de població + data +.csv
 df.to_csv((str(URL_town)+"_"+format(fecha.strftime("%Y%m%d"))+".csv"), index=True)
