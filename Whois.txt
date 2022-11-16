@@ -1,0 +1,52 @@
+pip install python-whois
+
+import whois
+
+print(whois.whois('http://www.habitaclia.com'))
+---
+
+{
+  "domain_name": [
+    "HABITACLIA.COM",
+    "habitaclia.com"
+  ],
+  "registrar": "Amazon Registrar, Inc.",
+  "whois_server": "whois.registrar.amazon.com",
+  "referral_url": null,
+  "updated_date": [
+    "2021-12-13 06:37:07",
+    "2021-12-13 06:37:08.509000"
+  ],
+  "creation_date": "2002-01-16 15:31:13",
+  "expiration_date": "2023-01-16 15:31:13",
+  "name_servers": [
+    "NS-1377.AWSDNS-44.ORG",
+    "NS-1863.AWSDNS-40.CO.UK",
+    "NS-478.AWSDNS-59.COM",
+    "NS-561.AWSDNS-06.NET",
+    "ns-1377.awsdns-44.org",
+    "ns-1863.awsdns-40.co.uk",
+    "ns-478.awsdns-59.com",
+    "ns-561.awsdns-06.net"
+  ],
+  "status": [
+    "clientTransferProhibited https://icann.org/epp#clientTransferProhibited",
+    "renewPeriod https://icann.org/epp#renewPeriod"
+  ],
+  "emails": [
+    "abuse@amazonaws.com",
+    "owner-1234094@habitaclia.com.whoisprivacyservice.org",
+    "admin-1234094@habitaclia.com.whoisprivacyservice.org",
+    "tech-1234094@habitaclia.com.whoisprivacyservice.org"
+  ],
+  "dnssec": "unsigned",
+  "name": "On behalf of habitaclia.com owner",
+  "org": "Whois Privacy Service",
+  "address": "P.O. Box 81226",
+  "city": "Seattle",
+  "state": "WA",
+  "registrant_postal_code": "98108-1226",
+  "country": "US"
+}
+
+----
